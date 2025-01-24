@@ -1,0 +1,371 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 3.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 48%;
+}
+
+.font-minecraft {
+  font-family: "VT323", "Press Start 2P", "Courier New", monospace;
+  letter-spacing: 0.5px;
+}
+
+/* Animation background */
+.animation-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  background: linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(var(--background)) 100%);
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: float 15s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-30px) translateX(15px);
+  }
+  50% {
+    transform: translateY(-60px) translateX(-15px);
+  }
+  75% {
+    transform: translateY(-30px) translateX(15px);
+  }
+}
+
+.inventory {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inventory .grid {
+  gap: 0.25rem;
+}
+
+/* Enhanced Animations */
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--secondary));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary));
+}
+
+/* Enhanced Input Styles */
+.input-enhanced {
+  @apply transition-all duration-200 ease-in-out;
+  @apply focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  @apply hover:border-primary;
+}
+
+/* Card Styles */
+.minecraft-card {
+  @apply bg-secondary rounded-lg p-4 border border-border;
+  @apply transition-all duration-300 ease-in-out;
+  @apply hover:shadow-lg;
+  @apply dark:bg-secondary/50 dark:backdrop-blur-sm;
+}
+
+/* Header Styles */
+.minecraft-header {
+  @apply bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10;
+  @apply border-b border-border;
+  @apply backdrop-blur-sm;
+  @apply sticky top-0 z-50;
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Button Styles */
+.minecraft-button {
+  @apply transition-all duration-200 ease-in-out;
+  @apply hover:shadow-md hover:-translate-y-0.5;
+  @apply active:translate-y-0 active:shadow-sm;
+  @apply focus:ring-2 focus:ring-primary focus:ring-offset-2;
+}
+
+/* Tooltip Styles */
+.minecraft-tooltip {
+  @apply bg-popover/95 backdrop-blur-sm;
+  @apply border border-border;
+  @apply shadow-lg;
+  @apply rounded-md;
+  @apply p-2;
+  @apply transition-all duration-200 ease-in-out;
+}
+
+/* Grid Layout */
+.minecraft-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+  @apply p-4;
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mc-gui {
+  display: grid;
+  grid-template-columns: 2px 2px auto 2px 2px;
+  grid-template-rows: 2px 2px auto 2px 2px;
+  grid-template-areas:
+    "tl-tl tr-tl t tl-tr tr-tr"
+    "bl-tl br-tl t bl-tr br-tr"
+    "l l inv r r"
+    "tl-bl tr-bl b tl-br tr-br"
+    "bl-bl br-bl b bl-br br-br";
+}
+
+.mc-gui > .s-br {
+  box-shadow: 2px 0 0 black, 0 2px 0 black;
+}
+
+.mc-gui > .s-bl {
+  box-shadow: -2px 0 0 black, 0 2px 0 black;
+}
+
+.mc-gui > .s-tr {
+  box-shadow: 0 -2px 0 black, 2px 0 0 black;
+}
+
+.mc-gui > .s-tl {
+  box-shadow: 0 -2px 0 black, -2px 0 0 black;
+}
+
+.mc-gui > .top {
+  grid-area: t;
+  box-shadow: 0 -2px 0 black;
+  background-color: #ffffff;
+}
+
+.mc-gui > .left {
+  grid-area: l;
+  box-shadow: -2px 0 0 black;
+  background-color: #ffffff;
+}
+
+.mc-gui > .right {
+  grid-area: r;
+  box-shadow: 2px 0 0 black;
+  background-color: #555555;
+}
+
+.mc-gui > .bottom {
+  grid-area: b;
+  box-shadow: 0 2px 0 black;
+  background-color: #555555;
+}
+
+.mc-gui > .middle {
+  background-color: #c6c6c6;
+  grid-area: inv;
+  padding: 0.4rem;
+}
+
+.mc-gui > .tl-tl {
+  grid-area: tl-tl;
+  background-color: #ffffff;
+  position: relative;
+  bottom: -4px;
+  right: -4px;
+}
+
+.mc-gui > .br-br {
+  grid-area: br-br;
+  background-color: #555555;
+  position: relative;
+  top: -4px;
+  left: -4px;
+}
+
+.mc-gui > .bl-tl,
+.mc-gui > .tr-tl,
+.mc-gui > .br-tl {
+  background-color: #ffffff;
+}
+
+.mc-gui > .bl-tl {
+  grid-area: bl-tl;
+}
+.mc-gui > .tr-tl {
+  grid-area: tr-tl;
+}
+.mc-gui > .br-tl {
+  grid-area: br-tl;
+}
+.mc-gui > .bl-tr {
+  grid-area: bl-tr;
+  background-color: #c6c6c6;
+}
+.mc-gui > .tr-bl {
+  grid-area: tr-bl;
+  background-color: #c6c6c6;
+}
+
+.mc-gui > .tr-br,
+.mc-gui > .tl-br,
+.mc-gui > .bl-br {
+  background-color: #555555;
+}
+
+.mc-gui > .tr-br {
+  grid-area: tr-br;
+}
+.mc-gui > .tl-br {
+  grid-area: tl-br;
+}
+.mc-gui > .bl-br {
+  grid-area: bl-br;
+}
+
+.cell {
+  position: relative;
+  width: 3.9rem;
+  height: 3.9rem;
+  background-color: #8b8b8b;
+  box-shadow: inset 2px 2px 0 0 #373737, inset -2px -2px 0 0 #ffffff;
+}
+
+.cell:hover {
+  background-color: #a1a1a1;
+}
+
+.cell::before,
+.cell::after {
+  content: "";
+  height: 2px;
+  width: 2px;
+  background-color: #8b8b8b;
+  position: absolute;
+}
+
+.cell::before {
+  top: 0;
+  right: 0;
+}
+
+.cell::after {
+  bottom: 0;
+  left: 0;
+}
+
+/* Estilos para el parseo de MiniMessage en modo oscuro */
+.dark .font-minecraft span[style*="color"] {
+  filter: brightness(0.8) saturate(1.2);
+}
+
+.dark .font-minecraft span[style*="#000000"] {
+  color: #ffffff !important;
+}
+
