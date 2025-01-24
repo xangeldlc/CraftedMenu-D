@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "CraftedMenus-D",
-  description: "Editor for DeluxePanels Minecraft plugin",
+  description: "Editor for DeluxeMenu Minecraft plugin",
 }
 
 export default function RootLayout({
