@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import React from "react"
 import { Input } from "@/components/ui/input"
@@ -19,15 +19,17 @@ import type {
   HasItemRequirement,
   JavaScriptRequirement,
 } from "../types/requirements"
+import { Trash2 } from "lucide-react"
 
 interface SlotEditorProps {
   slotKey: string
   slotData: Slot
   onUpdate: (slotData: Slot) => void
   onClose: () => void
+  onDelete: () => void
 }
 
-export default function SlotEditor({ slotKey, slotData, onUpdate, onClose }: SlotEditorProps) {
+export default function SlotEditor({ slotKey, slotData, onUpdate, onClose, onDelete }: SlotEditorProps) {
   const handleChange = (field: keyof Slot, value: unknown) => {
     if (field === "lore" && typeof value === "string") {
       onUpdate({ ...slotData, [field]: value.split("\n").filter((line) => line.trim() !== "") })
@@ -37,7 +39,22 @@ export default function SlotEditor({ slotKey, slotData, onUpdate, onClose }: Slo
   }
 
   const handleItemSelect = (item: { id: string; name: string }) => {
-    onUpdate({ ...slotData, material: item.id })
+    if (item.id.startsWith("PLAYER_HEAD#")) {
+      const textureValue = item.id.split("#")[1]
+      onUpdate({
+        ...slotData,
+        material: "PLAYER_HEAD",
+        nbt: {
+          SkullOwner: {
+            Properties: {
+              textures: [{ Value: textureValue }],
+            },
+          },
+        },
+      })
+    } else {
+      onUpdate({ ...slotData, material: item.id, displayName: item.name })
+    }
   }
 
   const handleRequirementUpdate = (
@@ -238,21 +255,42 @@ export default function SlotEditor({ slotKey, slotData, onUpdate, onClose }: Slo
               />
               <Label htmlFor={`optional-${key}`}>Optional</Label>
             </div>
-            <Button variant="destructive" size="sm" onClick={() => deleteRequirement(requirementType, key)}>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => deleteRequirement(requirementType, key)}
+              className="transition-all duration-300 hover:bg-red-600 hover:shadow-md"
+            >
               Delete Requirement
             </Button>
           </div>
         ))}
-        <Button onClick={() => addRequirement(requirementType)}>Add Requirement</Button>
+        <Button
+          onClick={() => addRequirement(requirementType)}
+          className="mt-4 transition-all duration-300 hover:shadow-md"
+        >
+          Add Requirement
+        </Button>
       </div>
     )
   }
 
+  const handleDeleteClick = () => {
+    console.log("Deleting slot:", slotKey)
+    onDelete()
+  }
+
   return (
-    <div className="rounded-lg p-4 w-full"
-    style={{ backgroundColor: 'var(--bg-color)' }}
-  >
+    <div className="rounded-lg p-4 w-full" style={{ backgroundColor: "var(--bg-color)" }}>
       <div className="flex justify-between items-center mb-4">
+        <Button
+          onClick={handleDeleteClick}
+          variant="destructive"
+          size="sm"
+          className="hover:bg-red-700 transition-colors duration-200"
+        >
+          <Trash2 className="h-3 w-3"/>
+        </Button>
         <h2 className="text-xl font-bold">Edit Slot {slotKey}</h2>
         <Button onClick={onClose} variant="ghost">
           X
@@ -355,3 +393,4 @@ UNBREAKING;3"
     </div>
   )
 }
+
