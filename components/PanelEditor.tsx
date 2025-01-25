@@ -103,6 +103,18 @@ export default function PanelEditor() {
     }))
   }
 
+  const handleSlotDelete = () => {
+    if (selectedSlot) {
+      console.log("Deleting slot in PanelEditor:", selectedSlot)
+      setPanel((prevPanel) => {
+        const updatedItems = { ...prevPanel.items }
+        delete updatedItems[selectedSlot]
+        return { ...prevPanel, items: updatedItems }
+      })
+      setSelectedSlot(null)
+    }
+  }
+
   const handlePanelUpdate = (field: keyof Panel, value: unknown) => {
     setPanel((prevPanel) => ({ ...prevPanel, [field]: value }))
   }
@@ -304,6 +316,7 @@ export default function PanelEditor() {
                     slotData={panel.items[selectedSlot] || {}}
                     onUpdate={(slotData) => handleSlotUpdate(selectedSlot, slotData)}
                     onClose={() => setSelectedSlot(null)}
+                    onDelete={handleSlotDelete}
                   />
                 </div>
               )}
