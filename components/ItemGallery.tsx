@@ -63,11 +63,11 @@ export default function ItemGallery({ onSelectItem }: ItemGalleryProps) {
       if (results.length > 0) {
         setSelectedHead(results[0])
       } else {
-        setError("No se encontraron resultados para la búsqueda.")
+        setError("No results found for the search.")
       }
     } catch (err) {
       console.error("Error searching heads:", err)
-      setError("Error al buscar cabezas. Por favor, intenta de nuevo.")
+      setError("Error searching heads. Please try again.")
       setHeads([])
     } finally {
       setIsLoading(false)
@@ -93,13 +93,13 @@ export default function ItemGallery({ onSelectItem }: ItemGalleryProps) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="minecraft-button w-full">
-          Seleccionar Ítem
+          Select Item
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] minecraft-card">
         <DialogHeader>
-          <DialogTitle className="font-minecraft text-xl">Galería de Ítems</DialogTitle>
-          <DialogDescription>Selecciona un ítem para añadirlo al slot</DialogDescription>
+          <DialogTitle className="font-minecraft text-xl">Item Gallery</DialogTitle>
+          <DialogDescription>Select an item to add it to the slot</DialogDescription>
         </DialogHeader>
         <Tabs defaultValue="items" value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2">
@@ -107,14 +107,14 @@ export default function ItemGallery({ onSelectItem }: ItemGalleryProps) {
               Items
             </TabsTrigger>
             <TabsTrigger value="heads" className="font-minecraft">
-              Cabezas
+              Heads
             </TabsTrigger>
           </TabsList>
           <div className="relative mt-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
-              placeholder={activeTab === "heads" ? "Buscar o pegar valor de textura..." : "Buscar ítem..."}
+              placeholder={activeTab === "heads" ? "Search or paste texture value..." : "Search item..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9 input-enhanced"
@@ -154,7 +154,7 @@ export default function ItemGallery({ onSelectItem }: ItemGalleryProps) {
             )}
             <div className="grid grid-cols-3 gap-2 overflow-y-auto max-h-[40vh] mt-4">
               {isLoading ? (
-                <div className="col-span-3 text-center py-4">Cargando...</div>
+                <div className="col-span-3 text-center py-4">Loading...</div>
               ) : heads.length > 0 ? (
                 heads.map((head) => (
                   <div
@@ -175,10 +175,10 @@ export default function ItemGallery({ onSelectItem }: ItemGalleryProps) {
                   </div>
                 ))
               ) : searchTerm.length > 2 ? (
-                <div className="col-span-3 text-center py-4">No se encontraron resultados</div>
+                <div className="col-span-3 text-center py-4">No results found</div>
               ) : (
                 <div className="col-span-3 text-center py-4">
-                  Escribe al menos 3 caracteres para buscar o pega el valor de una textura
+                  Enter at least 3 characters to search or paste a texture value. THE PREVIEW WILL ONLY BE SHOWN THROUGH "Minecraft URL" YOU ONLY HAVE TO PUT THE ID EJ; texture-id
                 </div>
               )}
             </div>
@@ -188,4 +188,3 @@ export default function ItemGallery({ onSelectItem }: ItemGalleryProps) {
     </Dialog>
   )
 }
-
