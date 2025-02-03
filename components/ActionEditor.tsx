@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface Action {
   type: string;
@@ -16,7 +16,7 @@ interface ActionEditorProps {
   label: string;
 }
 
-const predefinedActions = ['close', 'sound', 'message', 'broadcast', 'takemoney', 'console'];
+const predefinedActions = ['close', 'sound', 'message', 'takemoney', 'console'];
 
 export default function ActionEditor({ actions, onUpdate, label }: ActionEditorProps) {
   const [customAction, setCustomAction] = useState({ type: '', value: '' });
@@ -99,16 +99,7 @@ export default function ActionEditor({ actions, onUpdate, label }: ActionEditorP
             {action.type === 'sound' ? (
               <Select
                 value={action.value}
-                onValueChange={(value) => {
-                  if (value === 'ADD_CUSTOM_SOUND') {
-                    const customSound = prompt('Please enter the custom sound:');
-                    if (customSound) {
-                      updateAction(index, 'value', customSound);
-                    }
-                  } else {
-                    updateAction(index, 'value', value);
-                  }
-                }}
+                onValueChange={(value) => updateAction(index, 'value', value)}
               >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a sound" />
@@ -117,7 +108,6 @@ export default function ActionEditor({ actions, onUpdate, label }: ActionEditorP
                   <SelectItem value="ENTITY_PLAYER_LEVELUP">ENTITY_PLAYER_LEVELUP</SelectItem>
                   <SelectItem value="BLOCK_NOTE_BLOCK_PLING">BLOCK_NOTE_BLOCK_PLING</SelectItem>
                   <SelectItem value="ENTITY_EXPERIENCE_ORB_PICKUP">ENTITY_EXPERIENCE_ORB_PICKUP</SelectItem>
-                  <SelectItem value="ADD_CUSTOM_SOUND">Add custom sound</SelectItem>
                 </SelectContent>
               </Select>
             ) : (
@@ -136,3 +126,4 @@ export default function ActionEditor({ actions, onUpdate, label }: ActionEditorP
     </div>
   );
 }
+
