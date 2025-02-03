@@ -13,8 +13,11 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Search } from "lucide-react"
+import { Search, AlertCircle } from "lucide-react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import MinecraftHead3D from "./MinecraftHead3D"
 import itemData from "../data/minecraft-items.json"
+import { fetchHeads, type MinecraftHead } from "@/lib/minecraftHeads"
 
 interface Item {
   id: string
@@ -29,8 +32,12 @@ interface ItemGalleryProps {
 export default function ItemGallery({ onSelectItem }: ItemGalleryProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [filteredItems, setFilteredItems] = useState<Item[]>([])
+  const [heads, setHeads] = useState<MinecraftHead[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [activeTab, setActiveTab] = useState("items")
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedHead, setSelectedHead] = useState<MinecraftHead | null>(null)
 
   useEffect(() => {
     if (activeTab === "items") {
@@ -42,11 +49,43 @@ export default function ItemGallery({ onSelectItem }: ItemGalleryProps) {
             item.id.toLowerCase().includes(searchTerm.toLowerCase()),
         ),
       )
+    } else if (activeTab === "heads" && searchTerm.length > 2) {
+      searchHeads(searchTerm)
     }
   }, [searchTerm, activeTab])
 
+  const searchHeads = async (query: string) => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const results = await fetchHeads(query)
+      setHeads(results)
+      if (results.length > 0) {
+        setSelectedHead(results[0])
+      } else {
+        setError("No se encontraron resultados para la búsqueda.")
+      }
+    } catch (err) {
+      console.error("Error searching heads:", err)
+      setError("Error al buscar cabezas. Por favor, intenta de nuevo.")
+      setHeads([])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const handleItemClick = (item: Item) => {
     onSelectItem(item)
+    setIsOpen(false)
+  }
+
+  const handleHeadClick = (head: MinecraftHead) => {
+    setSelectedHead(head)
+    onSelectItem({
+      id: `texture-${head.value}`,
+      name: head.name,
+      material: `texture-${head.value}`,
+    })
     setIsOpen(false)
   }
 
@@ -54,25 +93,28 @@ export default function ItemGallery({ onSelectItem }: ItemGalleryProps) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="minecraft-button w-full">
-          Select Item
+          Seleccionar Ítem
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] minecraft-card">
         <DialogHeader>
-          <DialogTitle className="font-minecraft text-xl">Item Gallery</DialogTitle>
-          <DialogDescription>Select an item to add to the slot</DialogDescription>
+          <DialogTitle className="font-minecraft text-xl">Galería de Ítems</DialogTitle>
+          <DialogDescription>Selecciona un ítem para añadirlo al slot</DialogDescription>
         </DialogHeader>
         <Tabs defaultValue="items" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-1">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="items" className="font-minecraft">
               Items
+            </TabsTrigger>
+            <TabsTrigger value="heads" className="font-minecraft">
+              Cabezas
             </TabsTrigger>
           </TabsList>
           <div className="relative mt-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
-              placeholder="Search item..."
+              placeholder={activeTab === "heads" ? "Buscar o pegar valor de textura..." : "Buscar ítem..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9 input-enhanced"
@@ -98,8 +140,52 @@ export default function ItemGallery({ onSelectItem }: ItemGalleryProps) {
               ))}
             </div>
           </TabsContent>
+          <TabsContent value="heads">
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            {selectedHead && (
+              <div className="mb-4">
+                <MinecraftHead3D textureUrl={`https://textures.minecraft.net/texture/${selectedHead.value}`} />
+              </div>
+            )}
+            <div className="grid grid-cols-3 gap-2 overflow-y-auto max-h-[40vh] mt-4">
+              {isLoading ? (
+                <div className="col-span-3 text-center py-4">Cargando...</div>
+              ) : heads.length > 0 ? (
+                heads.map((head) => (
+                  <div
+                    key={head.value}
+                    onClick={() => handleHeadClick(head)}
+                    className={`minecraft-button flex flex-col items-center p-2 border rounded cursor-pointer hover:bg-accent ${
+                      selectedHead?.value === head.value ? "ring-2 ring-primary" : ""
+                    }`}
+                  >
+                    <Image
+                      src={`https://textures.minecraft.net/texture/${head.value}`}
+                      alt={head.name}
+                      width={32}
+                      height={32}
+                      className="pixelated w-8 h-8"
+                    />
+                    <span className="text-xs mt-1 text-center font-minecraft truncate w-full">{head.name}</span>
+                  </div>
+                ))
+              ) : searchTerm.length > 2 ? (
+                <div className="col-span-3 text-center py-4">No se encontraron resultados</div>
+              ) : (
+                <div className="col-span-3 text-center py-4">
+                  Escribe al menos 3 caracteres para buscar o pega el valor de una textura
+                </div>
+              )}
+            </div>
+          </TabsContent>
         </Tabs>
       </DialogContent>
     </Dialog>
   )
 }
+
